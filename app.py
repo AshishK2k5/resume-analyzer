@@ -11,12 +11,11 @@ st.set_page_config(
 
 # --- AI Model Configuration ---
 try:
-    # --- TEMPORARY TEST ---
-    # Paste your carefully copied API key here
-    MY_API_KEY = "AIzaSyBzlKn5Lm5DpNfm6smWI1kmVLFtiI8yTNE"
-    genai.configure(api_key=MY_API_KEY)
-    
+    genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
     model = genai.GenerativeModel('gemini-1.5-flash')
+except Exception as e:
+    st.error(f"Error configuring AI model: {e}")
+    st.stop()
 except Exception as e:
     st.error(f"Error configuring the AI model: {e}")
     st.stop()

@@ -68,6 +68,14 @@ def extract_text_from_file(file):
 
 # --- Main Application UI ---
 st.title("AI-Powered Career Toolkit 🏆")
+# Add this right after st.title("AI-Powered Career Toolkit 🏆")
+
+st.subheader("--- Diagnostic Test ---")
+if "TEST_KEY" in st.secrets:
+    st.success("Success! The secrets manager is working correctly.")
+else:
+    st.error("Error! The secrets manager is not reading the key.")
+st.subheader("--------------------")
 st.write("Your all-in-one assistant for resume feedback, career planning, and job applications.")
 
 uploaded_file = st.file_uploader("Upload your resume (PDF or DOCX)", type=["pdf", "docx"])

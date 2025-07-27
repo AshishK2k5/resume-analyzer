@@ -38,9 +38,6 @@ try:
 except Exception as e:
     st.error(f"Error configuring AI model: {e}")
     st.stop()
-except Exception as e:
-    st.error(f"Error configuring the AI model: {e}")
-    st.stop()
 
 # --- Helper Functions ---
 def extract_text_from_file(file):

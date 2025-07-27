@@ -32,11 +32,12 @@ if 'app_started' not in st.session_state:
 
 # --- AI Model Configuration ---
 try:
-    genai.configure(api_key=st.secrets["AIzaSyAfwqQ8IiF7UX_vS3oqEO_McFaa1BFQrhM"])
+    MY_API_KEY = "AIzaSyAfwqQ8IiF7UX_vS3oqEO_McFaa1BFQrhM"
+    genai.configure(api_key=MY_API_KEY)
     generation_config = genai.types.GenerationConfig(temperature=0.2)
     model = genai.GenerativeModel('gemini-1.5-flash')
 except Exception as e:
-    st.error(f"Error configuring AI model: {e}")
+    st.error(f"Error configuring the AI model: {e}")
     st.stop()
 
 # --- Helper Functions ---

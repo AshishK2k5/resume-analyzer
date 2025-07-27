@@ -32,12 +32,11 @@ if 'app_started' not in st.session_state:
 
 # --- AI Model Configuration ---
 try:
-    MY_API_KEY = "AIzaSyAfwqQ8IiF7UX_vS3oqEO_McFaa1BFQrhM"
-    genai.configure(api_key=MY_API_KEY)
+    genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
     generation_config = genai.types.GenerationConfig(temperature=0.2)
     model = genai.GenerativeModel('gemini-1.5-flash')
 except Exception as e:
-    st.error(f"Error configuring the AI model: {e}")
+    st.error(f"Error configuring AI model: {e}")
     st.stop()
 
 # --- Helper Functions ---
@@ -64,14 +63,6 @@ def extract_text_from_file(file):
 
 # --- Main Application UI ---
 st.title("AI-Powered Career Toolkit 🏆")
-# Add this right after st.title("AI-Powered Career Toolkit 🏆")
-
-st.subheader("--- Diagnostic Test ---")
-if "TEST_KEY" in st.secrets:
-    st.success("Success! The secrets manager is working correctly.")
-else:
-    st.error("Error! The secrets manager is not reading the key.")
-st.subheader("--------------------")
 st.write("Your all-in-one assistant for resume feedback, career planning, and job applications.")
 
 uploaded_file = st.file_uploader("Upload your resume (PDF or DOCX)", type=["pdf", "docx"])
@@ -135,7 +126,7 @@ if st.session_state.app_started and uploaded_file is not None:
                         try:
                             response = model.generate_content(live_editor_prompt, generation_config=generation_config)
                             st.session_state.general_result = response.text
-                            st.session_state.ats_result = "" # Clear other result
+                            st.session_state.ats_result = "" 
                         except Exception as e:
                             st.error(f"An error occurred during analysis: {e}")
                 
@@ -175,7 +166,7 @@ if st.session_state.app_started and uploaded_file is not None:
                         try:
                             response = model.generate_content(ats_prompt, generation_config=generation_config)
                             st.session_state.ats_result = response.text
-                            st.session_state.general_result = "" # Clear other result
+                            st.session_state.general_result = "" 
                         except Exception as e:
                             st.error(f"An error occurred during analysis: {e}")
                 elif not job_desc_for_ats:

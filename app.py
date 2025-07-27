@@ -32,14 +32,12 @@ if 'app_started' not in st.session_state:
 
 # --- AI Model Configuration ---
 try:
-    # This is the hardcoded version for your local computer to work.
-    # IMPORTANT: Remember to remove this and use st.secrets before your final push to GitHub.
-    MY_API_KEY = "GEMINI_API_KEY"
-    genai.configure(api_key=MY_API_KEY)
-    
+    genai.configure(api_key=st.secrets["AIzaSyAfwqQ8IiF7UX_vS3oqEO_McFaa1BFQrhM"])
     generation_config = genai.types.GenerationConfig(temperature=0.2)
-    
     model = genai.GenerativeModel('gemini-1.5-flash')
+except Exception as e:
+    st.error(f"Error configuring AI model: {e}")
+    st.stop()
 except Exception as e:
     st.error(f"Error configuring the AI model: {e}")
     st.stop()

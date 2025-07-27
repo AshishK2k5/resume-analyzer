@@ -34,7 +34,7 @@ if 'app_started' not in st.session_state:
 try:
     # This is the hardcoded version for your local computer to work.
     # IMPORTANT: Remember to remove this and use st.secrets before your final push to GitHub.
-    MY_API_KEY = "AIzaSyDlKJUjj6xVRFCjvJ1kEsRS6qomPfzcHU0"
+    MY_API_KEY = "GEMINI_API_KEY"
     genai.configure(api_key=MY_API_KEY)
     
     generation_config = genai.types.GenerationConfig(temperature=0.2)

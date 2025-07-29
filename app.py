@@ -5,14 +5,93 @@ import re
 import pandas as pd
 import docx
 
-# --- Page Configuration ---
+# --- 1. Page Configuration ---
 st.set_page_config(
     page_title="AI Career Toolkit",
-    page_icon="🏆",
+    page_icon="✨",
     layout="wide"
 )
 
-# --- Initialize Session State ---
+# --- 2. CSS for an Animated Gradient Background & Top Dashboard ---
+custom_css = """
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display.swap');
+
+    :root {
+        --primary-color: #6366f1; /* Indigo */
+        --text-color: #e5e7eb;
+        --heading-color: #ffffff;
+        --font-family: 'Inter', sans-serif;
+    }
+
+    @keyframes gradient {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    .stApp {
+        background: linear-gradient(-45deg, #0f172a, #1e1b4b, #312e81, #4f46e5);
+        background-size: 400% 400%;
+        animation: gradient 15s ease infinite;
+        color: var(--text-color);
+    }
+    
+    body, .stButton>button, .stTextInput input, .stTextArea textarea {
+        font-family: var(--font-family);
+    }
+    h1, h2, h3, h4, h5, h6 {
+        color: var(--heading-color) !important;
+        font-weight: 700 !important;
+    }
+    
+    /* NEW: Styling for the top control panel */
+    div[data-testid="stHorizontalBlock"] {
+        background: rgba(30, 41, 59, 0.5);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 1.5rem 2rem;
+        margin-bottom: 2rem;
+    }
+    
+    /* Glassmorphism for other containers */
+    .stTabs [data-baseweb="tab-list"], .st-expander, .stAlert {
+        background: rgba(40, 51, 69, 0.5) !important;
+        backdrop-filter: blur(10px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 12px !important;
+    }
+    
+    .stButton>button {
+        border-radius: 8px;
+        border: 1px solid var(--primary-color);
+        background-color: transparent;
+        color: #ffffff;
+        transition: all 0.3s ease;
+    }
+    .stButton>button:hover {
+        background-color: var(--primary-color);
+        box-shadow: 0 0 15px rgba(99, 102, 241, 0.5);
+        transform: translateY(-2px);
+    }
+    .stButton>button[kind="primary"] {
+        background-color: var(--primary-color);
+    }
+    
+    .stTabs [aria-selected="true"] {
+        background-color: var(--primary-color);
+        color: #ffffff;
+        border-radius: 8px;
+    }
+
+</style>
+"""
+st.markdown(custom_css, unsafe_allow_html=True)
+
+
+# --- AI Model & State Initialization (Your original code) ---
 if 'general_result' not in st.session_state:
     st.session_state.general_result = ""
 if 'ats_result' not in st.session_state:
@@ -30,7 +109,6 @@ if 'trends_result' not in st.session_state:
 if 'app_started' not in st.session_state:
     st.session_state.app_started = False
 
-# --- AI Model Configuration ---
 try:
     genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
     generation_config = genai.types.GenerationConfig(temperature=0.2)
@@ -39,7 +117,7 @@ except Exception as e:
     st.error(f"Error configuring AI model: {e}")
     st.stop()
 
-# --- Helper Functions ---
+# --- Helper Functions (Your original code) ---
 def extract_text_from_file(file):
     try:
         if file.name.endswith('.pdf'):
@@ -51,27 +129,30 @@ def extract_text_from_file(file):
         else:
             st.error("Unsupported file type.")
             return None
-        
-        if not text.strip():
-            st.error("Error: This file contains no text.")
-            return None
-        return text
+        return text if text.strip() else None
     except Exception as e:
-        st.error("An error occurred while reading the file.")
-        st.exception(e)
+        st.error(f"An error occurred while reading the file: {e}")
         return None
 
-# --- Main Application UI ---
-st.title("AI-Powered Career Toolkit 🏆")
-st.write("Your all-in-one assistant for resume feedback, career planning, and job applications.")
+# --- UI LOGIC with Top Dashboard (NO Sidebar) ---
+st.title("✨ AI Career Toolkit")
 
-uploaded_file = st.file_uploader("Upload your resume (PDF or DOCX)", type=["pdf", "docx"])
+# --- Top Control Panel ---
+with st.container():
+    col1, col2 = st.columns(2)
+    with col1:
+        st.header("1. Upload Resume")
+        uploaded_file = st.file_uploader("Upload your resume (PDF or DOCX)", type=["pdf", "docx"], label_visibility="collapsed")
+    
+    with col2:
+        st.header("2. Enter Target Job")
+        target_job = st.text_input("e.g., Senior Python Developer", help="Used for targeted analysis.")
 
-if uploaded_file is not None:
-    st.session_state.app_started = True
+st.divider()
 
-if not st.session_state.app_started:
-    st.info("💡 Upload your resume to unlock your personalized AI career toolkit!")
+# Main panel logic
+if uploaded_file is None:
+    st.info("💡 Upload your resume in the panel above to begin your personalized career analysis.")
     st.subheader("Features:")
     st.markdown("""
     - **📄 Resume Feedback:** Get a general score or a specific ATS score against a job description.
@@ -80,34 +161,25 @@ if not st.session_state.app_started:
     - **🎯 Career Insights:** Discover unique job roles and future market trends for your desired career.
     - **✍️ Cover Letter Generator:** Create a tailored cover letter for any job description.
     """)
-
-if st.session_state.app_started and uploaded_file is not None:
+else:
     resume_text = extract_text_from_file(uploaded_file)
     if resume_text:
-        st.header("Interactive Resume Editor & Toolkit")
-        
-        target_job = st.text_input("Enter a Target Job Title for Analysis (used across all tabs)")
-
+        st.header("Analysis Dashboard")
         left_column, right_column = st.columns(2)
 
         with left_column:
-            st.subheader("Edit Your Resume Text")
-            edited_text = st.text_area(
-                "Resume Content",
-                resume_text,
-                height=700,
-                label_visibility="collapsed"
-            )
+            st.subheader("Live Resume Editor")
+            edited_text = st.text_area("Resume Content", resume_text, height=700, label_visibility="collapsed")
 
         with right_column:
             tab1, tab2, tab3, tab4 = st.tabs(["📄 Resume Feedback", "🗺️ Learning Roadmap", "🎯 Career Insights", "✍️ Cover Letter"])
-
+            
+            # --- Tab 1: Your original code with full prompts ---
             with tab1:
                 st.subheader("Resume Analysis")
-                
                 st.markdown("##### Get General Feedback")
                 st.info("Get an overall score and general feedback from our AI recruiter.")
-                if st.button("Run General Analysis"):
+                if st.button("Run General Analysis", type="primary"):
                     with st.spinner("Running general analysis..."):
                         live_editor_prompt = f"""
                         You are a top-tier executive recruiter from a leading tech firm like Google or Goldman Sachs, known for your brutally honest but invaluable feedback. Your task is to conduct a professional-grade analysis of the following resume.
@@ -145,7 +217,7 @@ if st.session_state.app_started and uploaded_file is not None:
                 st.markdown("##### Get ATS Compatibility Score")
                 st.info("Paste a job description to get a specific ATS score and keyword analysis.")
                 job_desc_for_ats = st.text_area("Paste the Job Description here for ATS Analysis")
-                if st.button("Run ATS Analysis", disabled=not job_desc_for_ats):
+                if st.button("Run ATS Analysis", disabled=not job_desc_for_ats, type="primary"):
                     with st.spinner("Running ATS simulation..."):
                         ats_prompt = f"""
                         You are an advanced Applicant Tracking System (ATS) combined with an expert HR recruiter. Your primary goal is to analyze the provided resume against the provided job description.
@@ -169,8 +241,6 @@ if st.session_state.app_started and uploaded_file is not None:
                             st.session_state.general_result = "" 
                         except Exception as e:
                             st.error(f"An error occurred during analysis: {e}")
-                elif not job_desc_for_ats:
-                    st.warning("Please paste a job description to enable ATS Analysis.")
                 
                 if st.session_state.ats_result:
                     response_text = st.session_state.ats_result
@@ -184,7 +254,7 @@ if st.session_state.app_started and uploaded_file is not None:
 
                 st.divider()
 
-                if st.button("✨ Generate Enhanced Version"):
+                if st.button("✨ Generate Enhanced Version", type="primary"):
                     with st.spinner("Rewriting your resume for maximum impact..."):
                         enhancement_prompt = f"""
                         You are a world-class resume writer and editor for a top tech company. Your task is to take the user's resume text and rewrite it from scratch to be as powerful, professional, and impactful as possible.
@@ -214,11 +284,12 @@ if st.session_state.app_started and uploaded_file is not None:
                             file_name="enhanced_resume.txt",
                             mime="text/plain"
                         )
-
+            
+            # --- Tab 2: Your original code with full prompts ---
             with tab2:
                 st.subheader("Your Personalized Learning Roadmap")
                 roadmap_personalization = st.text_area("Add any personalizations (e.g., 'create a 60-day plan', 'focus on free courses')")
-                if st.button("Generate My Roadmap", disabled=not target_job):
+                if st.button("Generate My Roadmap", disabled=not target_job, type="primary"):
                     with st.spinner(f"Building your roadmap for {target_job}..."):
                         roadmap_prompt = f"""
                         You are a world-class academic advisor and career coach from an elite university's career services department. Your task is to create a personalized, flexible learning roadmap for a user who wants to become a "{target_job}".
@@ -239,15 +310,17 @@ if st.session_state.app_started and uploaded_file is not None:
                             st.session_state.roadmap_result = roadmap_response.text
                         except Exception as e:
                             st.error(f"An error occurred during roadmap generation: {e}")
-                elif not target_job:
-                    st.warning("Please enter a Target Job Title above to enable this feature.")
+                
+                if not target_job and not st.session_state.roadmap_result:
+                    st.warning("Please enter a Target Job Title in the sidebar to enable this feature.")
 
                 if st.session_state.roadmap_result:
                     st.markdown(st.session_state.roadmap_result)
-
+            
+            # --- Tab 3: Your original code with full prompts ---
             with tab3:
                 st.subheader("Career Opportunity & Market Insights")
-                if st.button("Find My Opportunities", disabled=not target_job):
+                if st.button("Find My Opportunities", disabled=not target_job, type="primary"):
                     with st.spinner("Scanning for career paths..."):
                         opportunity_prompt = f"""
                         You are a seasoned career strategist and futurist. Analyze the resume for the target role of "{target_job}".
@@ -268,15 +341,16 @@ if st.session_state.app_started and uploaded_file is not None:
                             st.session_state.opportunity_result = response.text
                         except Exception as e:
                             st.error(f"An error occurred during analysis: {e}")
-                elif not target_job:
-                    st.warning("Please enter a Target Job Title above to enable this feature.")
+                
+                if not target_job and not st.session_state.opportunity_result:
+                    st.warning("Please enter a Target Job Title in the sidebar to enable this feature.")
 
                 if st.session_state.opportunity_result:
                     st.markdown(st.session_state.opportunity_result)
 
                 st.divider()
                 st.subheader("Job Market Future Trends")
-                if st.button("Analyze Market Trends", disabled=not target_job):
+                if st.button("Analyze Market Trends", disabled=not target_job, type="primary"):
                     with st.spinner(f"Analyzing future trends for a {target_job}..."):
                         trends_prompt = f"""
                         Act as a senior market analyst from Gartner providing a direct report.
@@ -295,8 +369,9 @@ if st.session_state.app_started and uploaded_file is not None:
                             st.session_state.trends_result = response.text
                         except Exception as e:
                             st.error(f"An error occurred during trend analysis: {e}")
-                elif not target_job:
-                    st.warning("Please enter a Target Job Title above to enable this feature.")
+
+                if not target_job and not st.session_state.trends_result:
+                    st.warning("Please enter a Target Job Title in the sidebar to enable this feature.")
 
                 if st.session_state.trends_result:
                     trends_text = st.session_state.trends_result
@@ -313,10 +388,11 @@ if st.session_state.app_started and uploaded_file is not None:
                     except Exception as e:
                         st.info("Could not generate a graph from the analysis.")
             
+            # --- Tab 4: Your original code with full prompts ---
             with tab4:
                 st.subheader("AI Cover Letter Generator")
                 job_description = st.text_area("Paste the job description here")
-                if st.button("Generate Cover Letter", disabled=not job_description):
+                if st.button("Generate Cover Letter", disabled=not job_description, type="primary"):
                     with st.spinner("Writing a tailored cover letter..."):
                         cover_letter_prompt = f"""
                         You are a professional career writer. Your task is to write a concise and compelling cover letter and suggest an email subject line.
@@ -337,7 +413,8 @@ if st.session_state.app_started and uploaded_file is not None:
                             st.session_state.cover_letter_result = response.text
                         except Exception as e:
                             st.error(f"An error occurred during cover letter generation: {e}")
-                elif not job_description:
+
+                if not job_description and not st.session_state.cover_letter_result:
                     st.warning("Please paste a job description to enable this feature.")
 
                 if st.session_state.cover_letter_result:

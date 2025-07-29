@@ -1,0 +1,35 @@
+Job Title: Full Stack Developer
+Location: Pune, India
+Date Posted: July 28, 2025
+Company: CloudOrbit Systems Pvt. Ltd.
+
+Job Description (Standard)
+We are hiring a skilled Full Stack Developer to work on web applications and internal platforms. You will be responsible for both front-end and back-end development, ensuring seamless user experience and robust server-side logic.
+
+Responsibilities:
+Design and develop scalable web applications using modern frameworks.
+
+Build RESTful APIs and connect them with front-end clients.
+
+Optimize applications for performance and scalability.
+
+Collaborate with UI/UX designers and product teams.
+
+Maintain documentation and participate in code reviews.
+
+Requirements:
+Bachelor’s in Computer Science, IT, or related field.
+
+Proficient in JavaScript, React.js, Node.js, and Express.
+
+Familiarity with relational and NoSQL databases (PostgreSQL, MongoDB).
+
+Experience with Git, Docker, and CI/CD pipelines.
+
+Solid understanding of web fundamentals (HTML, CSS, HTTP).
+
+Preferred:
+Knowledge of TypeScript, GraphQL, or Next.js.
+
+Experience with cloud services (AWS, Azure, GCP).
+

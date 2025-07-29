@@ -1,0 +1,40 @@
+Job Title: AI Engineer
+Location: Bengaluru, India
+Date Posted: July 28, 2025
+Company: TechNova AI Solutions Pvt. Ltd.
+
+Job Description (Standard)
+We are seeking a talented AI Engineer to join our growing team in Bengaluru. As an AI Engineer, you will be responsible for developing, deploying, and maintaining AI-driven applications and systems that solve complex business problems.
+
+Responsibilities:
+Design, develop, and deploy machine learning and deep learning models for production use.
+
+Work with large-scale datasets and create robust data pipelines.
+
+Research and apply the latest AI/ML techniques to real-world use cases.
+
+Collaborate with data scientists, software engineers, and product teams to integrate AI capabilities into products.
+
+Optimize model performance and improve inference times.
+
+Stay up to date with AI trends, frameworks, and technologies.
+
+Requirements:
+Bachelor’s or Master’s in Computer Science, AI, Data Science, or related field.
+
+2+ years of experience in machine learning or AI development.
+
+Strong programming skills in Python (TensorFlow, PyTorch, Scikit-learn).
+
+Experience with cloud platforms like AWS, GCP, or Azure.
+
+Familiarity with data engineering (SQL, ETL pipelines, Spark).
+
+Excellent problem-solving and communication skills.
+
+Preferred:
+Experience with LLMs or Generative AI.
+
+Publications in AI/ML conferences.
+
+Knowledge of MLOps tools and deployment strategies.

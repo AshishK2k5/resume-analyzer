@@ -118,7 +118,7 @@ try:
     
     # Using 'gemini-1.5-flash-latest' to ensure compatibility and prevent 404 errors
     generation_config = genai.types.GenerationConfig(temperature=0.2)
-    model = genai.GenerativeModel('gemini-1.5-flash-latest')
+    model = genai.GenerativeModel('gemini-1.5-flash')
     
 except Exception as e:
     st.error(f"Error configuring the AI model: {e}")

@@ -110,7 +110,11 @@ if 'app_started' not in st.session_state:
     st.session_state.app_started = False
 
 try:
-    genai.configure(api_key=st.secrets["AIzaSyD_n-t7qv52daHnFKWEYD36kW50n6OvlF8"])
+    # HARDCODED KEY FOR LOCAL DEMO
+    # Replace the text inside the quotes with your actual API key starting with AIza...
+    MY_API_KEY = "AIzaSyD_n-t7qv52daHnFKWEYD36kW50n6OvlF8" 
+    
+    genai.configure(api_key=MY_API_KEY)
     generation_config = genai.types.GenerationConfig(temperature=0.2)
     model = genai.GenerativeModel('gemini-1.5-flash')
 except Exception as e:

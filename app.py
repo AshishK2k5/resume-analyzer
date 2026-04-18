@@ -112,7 +112,7 @@ if 'app_started' not in st.session_state:
 try:
     # --- AI Model Configuration (Optimized for Local Demo) ---
     # This hardcoded method ensures your laptop demo works flawlessly
-    MY_API_KEY = "AIzaSyBdmNJ9WDEvUATvDmp_JA07t03mz2IcH0g"
+    MY_API_KEY = "MY_API_KEY"
     
     genai.configure(api_key=MY_API_KEY)
     

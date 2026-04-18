@@ -110,15 +110,19 @@ if 'app_started' not in st.session_state:
     st.session_state.app_started = False
 
 try:
-    # HARDCODED KEY FOR LOCAL DEMO
-    # Replace the text inside the quotes with your actual API key starting with AIza...
-    MY_API_KEY = "AIzaSyD_n-t7qv52daHnFKWEYD36kW50n6OvlF8" 
+    # --- AI Model Configuration (Optimized for Local Demo) ---
+    # This hardcoded method ensures your laptop demo works flawlessly
+    MY_API_KEY = "AIzaSyBMTqpELWZ0RilfwudWx4y6Ds9DAC2v9zY"
     
     genai.configure(api_key=MY_API_KEY)
+    
+    # Using 'gemini-1.5-flash-latest' to ensure compatibility and prevent 404 errors
     generation_config = genai.types.GenerationConfig(temperature=0.2)
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    model = genai.GenerativeModel('gemini-1.5-flash-latest')
+    
 except Exception as e:
-    st.error(f"Error configuring AI model: {e}")
+    st.error(f"Error configuring the AI model: {e}")
+    st.info("Check if your API key is correct and your internet connection is active.")
     st.stop()
 
 # --- Helper Functions (Your original code) ---
